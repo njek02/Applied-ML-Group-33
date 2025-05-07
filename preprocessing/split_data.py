@@ -1,4 +1,6 @@
 import pandas as pd
+import os
+import shutil
 from sklearn.model_selection import train_test_split
 
 
@@ -35,8 +37,36 @@ def save_data(train_set: pd.DataFrame, val_set: pd.DataFrame, test_set: pd.DataF
     return
 
 
+def move_subset(subset, source_dir, target_dir):
+    os.makedirs(target_dir, exist_ok=True)
+
+    files_moved = 0
+    for file_name in subset["clip_name"]:
+        source_path = os.path.join(source_dir, file_name)
+        target_path = os.path.join(target_dir, file_name)
+
+        if os.path.exists(source_path):
+            shutil.move(source_path, target_path)
+            files_moved += 1
+            print(f"File {file_name} moved successfully")
+        else:
+            print(f"File {file_name} does not exist")
+
+    print(f"Moved {files_moved} files")
+    return
+
+
 if __name__ == "__main__":
     df = pd.read_csv("data\\train.csv")
     train_set, val_set, test_set = split_data(df)
 
     save_data(train_set, val_set, test_set)
+
+    source_dir = "data\\dataset"
+    training_dir = "data\\training_data"
+    validation_dir = "data\\validation_data"
+    test_dir = "data\\test_data"
+
+    move_subset(train_set, source_dir, training_dir)
+    move_subset(val_set, source_dir, validation_dir)
+    move_subset(test_set, source_dir, test_dir)
