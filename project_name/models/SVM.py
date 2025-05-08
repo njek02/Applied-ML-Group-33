@@ -19,7 +19,7 @@ class SVCModel():
         Returns:
             SVC: Trained SVC model
         """        
-        self.svm.fit(x_train, y_train)
+        return self.svm.fit(x_train, y_train)
 
     def predict(self, x) -> np.ndarray:
         """
@@ -29,4 +29,4 @@ class SVCModel():
         Args:
             x (numpy.ndarray): Predicted class labels for each input sample
         """        
-        return self.svm.predict(x)
+        self.svm.predict(x)
