@@ -9,6 +9,7 @@ class SVCModel():
         self.svm = SVC(kernel="poly", degree = 2)
 
     def fit(self, x_train, y_train) -> None:
+        
         """
         Fits the SVC model to the training data.
 
@@ -16,17 +17,16 @@ class SVCModel():
             x_train (numpy.ndarray): Training features
             y_train (numpy.ndarray): Target labels
 
-        Returns:
-            SVC: Trained SVC model
         """        
-        return self.svm.fit(x_train, y_train)
+        self.svm.fit(x_train, y_train)
 
     def predict(self, x) -> np.ndarray:
         """
         Predicts the class labels for the given input data.
-
-
         Args:
-            x (numpy.ndarray): Predicted class labels for each input sample
-        """        
-        self.svm.predict(x)
+            x (numpy.ndarray): Input features
+
+        Returns:
+            np.ndarray: The predicted class labels for each input data point.
+        """             
+        return self.svm.predict(x)
