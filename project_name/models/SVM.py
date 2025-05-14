@@ -6,7 +6,7 @@ class SVCModel():
         """
         Initializes an SVC model with a polynomial kernel of a specific degree.
         """        
-        self.svm = SVC(kernel="poly", degree = 2)
+        self.svm = SVC(kernel="poly", degree = 5)
 
     def fit(self, x_train, y_train) -> None:
         
