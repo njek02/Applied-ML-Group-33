@@ -4,9 +4,9 @@ import numpy as np
 class SVCModel():
     def __init__(self):
         """
-        Initializes an SVC model with a polynomial kernel of a specific degree.
+        Initializes an SVC model with a radial kernel of a specific degree.
         """        
-        self.svm = SVC(kernel="poly", degree = 5)
+        self.svm = SVC(kernel="rbf")
 
     def fit(self, x_train, y_train) -> None:
         

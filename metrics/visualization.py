@@ -1,22 +1,22 @@
 import matplotlib.pyplot as mp
 import seaborn as sb
 from metrics.evaluation import evaluate_model
-from sklearn.metrics import roc_curve, auc
+from sklearn.metrics import roc_curve, auc, confusion_matrix
 
 class Visualizer():
 
-    def plot_confusion_matrix(self, y_pred, y_true, classes, model_name):
+    def plot_confusion_matrix(self, y_pred, y_true, model_name):
         """
         Plot the confusion matrix for the given predictions and true labels.
         """
-        cm = evaluate_model("confusion_matrix", y_true, y_pred)
-        mp.figure(figsize=(10, 7))
-        sb.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=classes, yticklabels=classes)
-        mp.title(f"Confusion Matrix for {model_name}")
-        mp.xlabel("Predicted")
-        mp.ylabel("True")
-        mp.savefig(f"confusion_matrix_{model_name}.png")
-        mp.show()
+        cm = confusion_matrix(y_true, y_pred, labels=[0, 1])
+
+        print("Confusion Matrix (Actual vs Predicted):")
+        print("               Pred 0    Pred 1")
+        print(f"Actual 0     {cm[0][0]:>8} {cm[0][1]:>8}")
+        print(f"Actual 1     {cm[1][0]:>8} {cm[1][1]:>8}")
+
+        return cm
 
     def plot_binary_ROC_AUC(self, y_true, y_pred_prob, model_name):
         fpr, tpr, _ = roc_curve(y_true, y_pred_prob)
