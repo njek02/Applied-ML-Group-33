@@ -3,12 +3,14 @@ import os
 import numpy as np
 import pandas as pd
 from normalization import peak_normalization, spectrogram_normalization
-from pca import to_pca
+# from pca import to_pca
 # from split_data import datasplit
 import librosa
 from wave_to_spec import wave_to_spec
 import matplotlib.pyplot as plt
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from metrics.visualization import Visualizer
+from metrics.evaluation import evaluate_model
 from project_name.models.SVM import SVCModel 
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
@@ -33,6 +35,7 @@ class Preprocess():
 
         flat_spec_list = np.mean(spec_list, axis=1).reshape(len(spec_list),-1)
         x_train = np.array(flat_spec_list)
+        # np.save("data/x_train.npy", x_train)
         self.pipeline.fit(x_train, dataset["label"])
 
 
@@ -44,6 +47,7 @@ class Preprocess():
 
         flat_spec_list = np.mean(spec_list, axis=1).reshape(len(spec_list),-1)
         x_predict = np.array(flat_spec_list)
+        # np.save(f"{file_location}_list.npy", x_predict)
         return self.pipeline.predict(x_predict)
 
 
@@ -59,24 +63,37 @@ def create_spectrogram(file_path: str):
 
 if __name__ == "__main__":
     # Example usage
-    # preprocessor = Preprocess()
+    preprocessor = Preprocess()
     # preprocessor.preprocess_training_files("data/training_data")
-    # val_list = preprocessor.preprocess_validation_test_files("data/validation_data")
-    # test_list = preprocessor.preprocess_validation_test_files("data/test_data")
+    # val_predict = preprocessor.preprocess_validation_test_files("data/validation_data")
+    # test_predict = preprocessor.preprocess_validation_test_files("data/test_data")
+    
+    training_data = np.load("data/x_train.npy")
+    train_dataset = pd.read_csv("data/training_data.csv")
+    preprocessor.pipeline.fit(training_data, train_dataset["label"])
 
-    # np.save("data/val_list.npy", val_list)
-    # np.save("data/test_list.npy", test_list)
+    val_list = np.load("data/validation_data_list.npy")
+    val_dataset = pd.read_csv("data/validation_data.csv")
+    val_predict = preprocessor.pipeline.predict(val_list)
 
-    # print(len(val_list), np.count_nonzero(val_list))
-    # print(len(test_list), np.count_nonzero(test_list))
+    test_list = np.load("data/test_data_list.npy")
+    test_dataset = pd.read_csv("data/test_data.csv")
+    test_predict = preprocessor.pipeline.predict(test_list)
 
-    val_list = np.load("data/val_list.npy")
-    test_list = np.load("data/test_list.npy")
-    val_data = pd.read_csv("data/validation_data.csv")
-    test_data = pd.read_csv("data/test_data.csv")
-    y_val = np.array(val_data["label"])
-    y_test = np.array(test_data["label"])
-    print(np.count_nonzero(y_val))
-    print(np.count_nonzero(y_test))
-    print(np.count_nonzero(val_list - y_val))
-    print(np.count_nonzero(test_list- y_test))
+    print(evaluate_model("classification_report", val_dataset["label"], val_predict))
+    print(evaluate_model("classification_report", test_dataset["label"], test_predict))
+
+    Visualizer().plot_confusion_matrix(val_predict, val_dataset["label"], "Validation")
+    Visualizer().plot_confusion_matrix(test_predict, test_dataset["label"], "Test")
+
+
+    # val_list = np.load("data/val_list.npy")
+    # test_list = np.load("data/test_list.npy")
+    # val_data = pd.read_csv("data/validation_data.csv")
+    # test_data = pd.read_csv("data/test_data.csv")
+    # y_val = np.array(val_data["label"])
+    # y_test = np.array(test_data["label"])
+    # print(np.count_nonzero(y_val))
+    # print(np.count_nonzero(y_test))
+    # print(np.count_nonzero(val_list - y_val))
+    # print(np.count_nonzero(test_list- y_test))
