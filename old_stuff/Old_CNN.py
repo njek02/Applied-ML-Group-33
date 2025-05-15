@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
-from torcheval.metrics.functional import multiclass_f1_score, multiclass_accuracy, multiclass_confusion_matrix
+# from torcheval.metrics.functional import multiclass_f1_score, multiclass_accuracy, multiclass_confusion_matrix
 import matplotlib.pyplot as plt
 
 
@@ -17,32 +17,20 @@ class CNN(nn.Module):
 
         self.model_layers = nn.Sequential(
             # Convolutional block 1
-            nn.Conv2d(in_channels=3, out_channels=32, kernel_size=3, padding=1),
-            nn.BatchNorm2d(num_features=32),
+            nn.Conv2d(in_channels=1, out_channels=8, kernel_size=3, padding=1),  # (8, 32, 32)
             nn.ReLU(),
-            nn.Conv2d(in_channels=32, out_channels=32, kernel_size=3, padding=1),
+            nn.MaxPool2d(kernel_size=2, stride=2),  # (8, 32, 32)
+            nn.Conv2d(in_channels=8, out_channels=16, kernel_size=3, padding=1),  # (16, 16, 16)
             nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2, stride=2),
-            nn.Dropout(p=0.2),
+            nn.MaxPool2d(kernel_size=2, stride=2),  # (16, 8, 8)
 
-            # Convolutional block 2
-            nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3, padding=1),
-            nn.BatchNorm2d(64),
-            nn.ReLU(),
-            nn.Conv2d(in_channels=64, out_channels=64, kernel_size=3, padding=1),
-            nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2, stride=2),
-            nn.Dropout(p=0.2),
-
-            nn.Flatten(), # Flatten the Tensor into a 1D output
+            nn.Flatten(),  # Flatten the Tensor into a 1D output
 
             # Fully connected layers
-            nn.Linear(in_features=64 * 8 * 8, out_features=128),
+            nn.Linear(in_features=16 * 8 * 8, out_features=128),
             nn.ReLU(),
-            nn.Dropout(p=0.1),
-            nn.Linear(in_features=128, out_features=10),
+            nn.Linear(in_features=128, out_features=2),
         )
-
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
@@ -66,16 +54,24 @@ class CNN(nn.Module):
         Returns:
             None
         """
-        criterion = nn.CrossEntropyLoss()
-        optimizer = optim.Adam(params=self.parameters(), lr=0.0005, weight_decay=0.01)
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        print(device)
+        self.to(device)
 
-        num_epochs = 30
+        criterion = nn.CrossEntropyLoss()
+        optimizer = optim.Adam(params=self.parameters(), lr=0.01)
+
+        num_epochs = 10
         train_losses, validation_losses = [], []
 
         for epoch in range(num_epochs):
+            self.train()
             # Training phase
             train_loss = 0
+            i = 0
             for inputs, labels in training_data:
+                print("Step: ", i)
+                inputs, labels = inputs.to(device), labels.to(device)
 
                 optimizer.zero_grad()
                 outputs = self(inputs)
@@ -85,15 +81,17 @@ class CNN(nn.Module):
                 loss.backward()
                 optimizer.step()
                 train_loss += loss.item()
-
-                training_accuracy = multiclass_accuracy(predicted, labels)
+                i += 1
 
             train_losses.append(train_loss / len(training_data))
 
             # Validation phase
+            self.eval()
             validation_loss = 0
             with torch.no_grad():
                 for inputs, labels in validation_data:
+
+                    inputs, labels = inputs.to(device), labels.to(device)
 
                     outputs = self(inputs)
                     _, predicted = torch.max(outputs, 1)
@@ -101,15 +99,11 @@ class CNN(nn.Module):
                     loss = criterion(outputs, labels)
                     validation_loss += loss.item()
 
-                    validation_accuracy = multiclass_accuracy(predicted, labels)
-
             validation_losses.append(validation_loss / len(validation_data))
 
             print(f"Epoch [{epoch+1}/{num_epochs}], " +
                   f"Train Loss: {train_losses[-1]:.4f}, " +
-                  f"Validation Loss: {validation_losses[-1]:.4f}, " +
-                  f"Train Accuracy: {training_accuracy * 100:.2f}%, " +
-                  f"Validation Accuracy: {validation_accuracy * 100:.2f}%")
+                  f"Validation Loss: {validation_losses[-1]:.4f}, ")
 
         print("Training finished")
         # Plot training and validation losses
