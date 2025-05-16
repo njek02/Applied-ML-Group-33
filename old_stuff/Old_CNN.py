@@ -5,16 +5,20 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 # from torcheval.metrics.functional import multiclass_f1_score, multiclass_accuracy, multiclass_confusion_matrix
 import matplotlib.pyplot as plt
+import numpy as np
+from sklearn.utils.class_weight import compute_class_weight
+from sklearn.metrics import f1_score
 
 
 class CNN(nn.Module):
     """A Convolutional Neural Network (CNN) model for image classification."""
-    def __init__(self) -> None:
+    def __init__(self, class_weights) -> None:
         """
         Initializes the CNN model by defining the layers.
         """
         super().__init__()
 
+        self.class_weights = class_weights
         self.model_layers = nn.Sequential(
             # Convolutional block 1
             nn.Conv2d(in_channels=1, out_channels=8, kernel_size=3, padding=1),  # (8, 32, 32)
@@ -24,10 +28,14 @@ class CNN(nn.Module):
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2),  # (16, 8, 8)
 
+            nn.Conv2d(16, 32, kernel_size=3, padding=1),  # (32, 8, 8)
+            nn.ReLU(),
+            nn.MaxPool2d(2, 2),  # (32, 4, 4)
+
             nn.Flatten(),  # Flatten the Tensor into a 1D output
 
             # Fully connected layers
-            nn.Linear(in_features=16 * 8 * 8, out_features=128),
+            nn.Linear(in_features=32 * 4 * 4, out_features=128),
             nn.ReLU(),
             nn.Linear(in_features=128, out_features=2),
         )
@@ -55,11 +63,12 @@ class CNN(nn.Module):
             None
         """
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        print(device)
         self.to(device)
 
-        criterion = nn.CrossEntropyLoss()
-        optimizer = optim.Adam(params=self.parameters(), lr=0.01)
+        weights = torch.tensor(self.class_weights, dtype=torch.float).to(device)
+
+        criterion = nn.CrossEntropyLoss(weight=weights)
+        optimizer = optim.Adam(params=self.parameters(), lr=1e-3)
 
         num_epochs = 10
         train_losses, validation_losses = [], []
@@ -68,9 +77,9 @@ class CNN(nn.Module):
             self.train()
             # Training phase
             train_loss = 0
-            i = 0
+            train_preds, train_targets = [], []
             for inputs, labels in training_data:
-                print("Step: ", i)
+                #print("Step: ", i)
                 inputs, labels = inputs.to(device), labels.to(device)
 
                 optimizer.zero_grad()
@@ -81,9 +90,11 @@ class CNN(nn.Module):
                 loss.backward()
                 optimizer.step()
                 train_loss += loss.item()
-                i += 1
+                train_preds.extend(predicted.cpu().numpy())
+                train_targets.extend(labels.cpu().numpy())
 
             train_losses.append(train_loss / len(training_data))
+            train_f1 = f1_score(train_targets, train_preds, average='weighted')
 
             # Validation phase
             self.eval()
@@ -103,7 +114,8 @@ class CNN(nn.Module):
 
             print(f"Epoch [{epoch+1}/{num_epochs}], " +
                   f"Train Loss: {train_losses[-1]:.4f}, " +
-                  f"Validation Loss: {validation_losses[-1]:.4f}, ")
+                  f"Validation Loss: {validation_losses[-1]:.4f}, " +
+                  f"F-1 Score: {train_f1}")
 
         print("Training finished")
         # Plot training and validation losses
