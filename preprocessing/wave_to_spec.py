@@ -1,13 +1,5 @@
-import numpy as np
 import librosa
-
-
-def rms_normalize(y):
-    rms = np.sqrt(np.mean(y**2))
-    if rms > 0:
-        return y / rms
-    else:
-        return y
+from normalization import rms_normalize
 
 
 def wave_to_spec(y, sr, n_fft, hop_len, n_mels):
