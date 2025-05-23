@@ -7,7 +7,7 @@ from torch.utils.data import DataLoader
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.utils.class_weight import compute_class_weight
-from sklearn.metrics import f1_score
+from sklearn.metrics import f1_score, confusion_matrix, roc_auc_score
 
 
 class CNN(nn.Module):
@@ -70,7 +70,7 @@ class CNN(nn.Module):
         criterion = nn.CrossEntropyLoss(weight=weights)
         optimizer = optim.Adam(params=self.parameters(), lr=1e-3)
 
-        num_epochs = 10
+        num_epochs = 15
         train_losses, validation_losses = [], []
 
         for epoch in range(num_epochs):
@@ -94,7 +94,7 @@ class CNN(nn.Module):
                 train_targets.extend(labels.cpu().numpy())
 
             train_losses.append(train_loss / len(training_data))
-            train_f1 = f1_score(train_targets, train_preds, average='weighted')
+            train_f1 = f1_score(train_targets, train_preds)
 
             # Validation phase
             self.eval()
@@ -137,37 +137,37 @@ class CNN(nn.Module):
         Returns:
             None
         """
-        predictions = torch.tensor([])
-        ground_truths = torch.tensor([])
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.to(device)
+
+        predictions = []
+        ground_truths = []
+        probabilities = []
+        
 
         with torch.no_grad():
             for inputs, labels in test_data:
+                inputs, labels = inputs.to(device), labels.to(device)
 
                 outputs = self(inputs)
                 _, predicted = torch.max(outputs, 1)
+                probs = torch.softmax(outputs, dim=1)[:, 1]  # Probability of class 1
 
-                predictions = torch.cat((predictions, predicted))
-                ground_truths = torch.cat((ground_truths, labels))
+                probabilities.extend(probs.cpu().numpy())
+                predictions.extend(predicted.cpu().numpy())
+                ground_truths.extend(labels.cpu().numpy())
 
         # Metrics
-        # Accuracy
-        accuracy = multiclass_accuracy(predictions, ground_truths)
-
-        # Log Loss (on final batch)
-        log_loss = torch.nn.functional.cross_entropy(outputs, labels)
-
         # F-1 score
-        f_1_score = multiclass_f1_score(predictions.to(dtype=torch.int64), 
-                                        ground_truths.to(dtype=torch.int64),
-                                        average='macro', num_classes=10)
+        f_1_score = f1_score(y_true=ground_truths, y_pred=predictions)
 
         # Confusion Matrix
-        confusion_matrix = multiclass_confusion_matrix(predictions.to(dtype=torch.int64),
-                                                       ground_truths.to(dtype=torch.int64),
-                                                       num_classes=10)
+        conf_matrix = confusion_matrix(y_true=ground_truths, y_pred=predictions)
+
+        # Area under ROC
+        auroc = roc_auc_score(y_true=ground_truths, y_score=probabilities)
 
         # Results
-        print(f"Accuracy: {accuracy * 100:.2f}%")
-        print(f"Log Loss: {log_loss:.4f}")
         print(f"F-1 Score: {f_1_score:.4f}")
-        print(f"Confusion Matrix: {confusion_matrix}")
+        print(f"Area under ROC: {auroc:.4f}")
+        print(f"Confusion Matrix: {conf_matrix}")

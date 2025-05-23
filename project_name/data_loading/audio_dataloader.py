@@ -13,6 +13,7 @@ class AudioDataset(Dataset):
         df = pd.read_csv(csv_path)
         self.file_label_dict = dict(zip(df['clip_name'], df['label']))
         self.file_list = [f for f in os.listdir(folder_path) if f.endswith('.aiff')]
+        self.transform = transform
 
     def __len__(self):
         return len(self.file_list)

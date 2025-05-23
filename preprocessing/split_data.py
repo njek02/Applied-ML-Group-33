@@ -30,6 +30,9 @@ def save_data(train_set: pd.DataFrame, val_set: pd.DataFrame, test_set: pd.DataF
         val_set (pd.DataFrame): The validation dataset.
         test_set (pd.DataFrame): The test dataset.
     """
+
+    os.makedirs("data/data_labels", exist_ok=True)
+
     train_set.to_csv("data/data_labels/training_data.csv", index=False)
     val_set.to_csv("data/data_labels/validation_data.csv", index=False)
     test_set.to_csv("data/data_labels/test_data.csv", index=False)
@@ -62,9 +65,9 @@ def split_data_folder(data_csv_path: str, source_dir: str):
 
     save_data(train_set, val_set, test_set)
 
-    training_dir = "data\\training_data"
-    validation_dir = "data\\validation_data"
-    test_dir = "data\\test_data"
+    training_dir = "data/training_data"
+    validation_dir = "data/validation_data"
+    test_dir = "data/test_data"
 
     move_subset(train_set, source_dir, training_dir)
     move_subset(val_set, source_dir, validation_dir)
@@ -72,31 +75,3 @@ def split_data_folder(data_csv_path: str, source_dir: str):
 
     print("Finished data folder split")
     return
-
-
-if __name__ == "__main__":
-    """Move samples to respective folders"""
-
-    split_data_folder("data\\train.csv", "data\\dataset")
-    # df = pd.read_csv("data\\train.csv")
-    # train_set, val_set, test_set = split_data(df)
-
-    # save_data(train_set, val_set, test_set)
-
-    # source_dir = "data\\dataset"
-    # training_dir = "data\\training_data"
-    # validation_dir = "data\\validation_data"
-    # test_dir = "data\\test_data"
-
-    # move_subset(train_set, source_dir, training_dir)
-    # move_subset(val_set, source_dir, validation_dir)
-    # move_subset(test_set, source_dir, test_dir)
-
-    """Restore the original dataset"""
-    # df = pd.read_csv("data\\train.csv")
-    # train_set, val_set, test_set = split_data(df)
-    # target_dir = "data/dataset"
-
-    # move_subset(train_set, "data/training_data", target_dir)
-    # move_subset(val_set, "data/validation_data", target_dir)
-    # move_subset(test_set, "data/test_data", target_dir)
