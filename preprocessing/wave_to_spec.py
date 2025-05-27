@@ -1,8 +1,19 @@
 import librosa
+import numpy as np
 from preprocessing.normalization import rms_normalize
 
 
-def wave_to_spec(y, sr):
+def wave_to_spec(y: np.ndarray, sr: int) -> np.ndarray:
+    """
+    Convert a waveform to a spectrogram.
+
+    Args:
+        y (np.ndarray): a 1D numpy array representing the audio waveform.
+        sr (int): the sample rate of the audio waveform.
+
+    Returns:
+        np.ndarray: a 2D numpy array representing the spectrogram.
+    """
 
     y = rms_normalize(y)
 

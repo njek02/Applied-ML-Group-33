@@ -2,7 +2,16 @@ import numpy as np
 from PIL import Image
 
 
-def spec_to_image(spectrogram: np.ndarray):
+def spec_to_image(spectrogram: np.ndarray) -> np.ndarray:
+    """
+    Convert a spectrogram to an image.
+
+    Args:
+        spectrogram (np.ndarray): The input spectrogram.
+
+    Returns:
+        input_image (np.ndarray): The output image representation of the spectrogram.
+    """    
     # Normalize spectrogram to [0, 255]
     spec_image = (spectrogram - spectrogram.min()) / (spectrogram.max() - spectrogram.min()) * 255
     spec_image = spec_image.astype(np.uint8)

@@ -6,6 +6,9 @@ from starlette.responses import RedirectResponse
 from pydantic import BaseModel
 
 class Prediction(BaseModel):
+    """
+    Class for the prediction response model.
+    """    
     filename: str
     prediction: str
 
