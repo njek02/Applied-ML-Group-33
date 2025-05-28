@@ -19,7 +19,13 @@ from sklearn.pipeline import Pipeline
 
 
 class Preprocess():
-    def __init__(self):
+    """
+    Preprocess audio files for SVM input.
+    """    
+    def __init__(self) -> None:
+        """
+        Initialize the preprocessing pipeline for SVM.
+        """        
         self.pipeline = Pipeline([
             ('scaler', StandardScaler()),
             ('pca', PCA(n_components=50)),
@@ -27,7 +33,13 @@ class Preprocess():
         ])
 
 
-    def preprocess_training_files(self, file_location):
+    def preprocess_training_files(self, file_location: str) -> None:
+        """
+        Preprocess training audio files and fit the SVM model.
+
+        Args:
+            file_location (str): Path to the training data folder.
+        """        
         spec_list = []
         dataset = pd.read_csv(f"{file_location}.csv")
         for file_name in dataset["clip_name"]:
@@ -39,7 +51,16 @@ class Preprocess():
         self.pipeline.fit(x_train, dataset["label"])
 
 
-    def preprocess_validation_test_files(self, file_location):
+    def preprocess_validation_test_files(self, file_location: str) -> np.ndarray:
+        """
+        Preprocess validation/test audio files for SVM input.
+
+        Args:
+            file_location (str): Path to the validation/test data folder.
+        
+        Returns:
+            np.ndarray: Predicted labels for the validation/test data.
+        """
         spec_list = []
         dataset = pd.read_csv(f"{file_location}.csv")
         for file_name in dataset["clip_name"]:
@@ -51,7 +72,16 @@ class Preprocess():
         return self.pipeline.predict(x_predict)
 
 
-def create_spectrogram(file_path: str):
+def create_spectrogram(file_path: str) -> np.ndarray:
+    """
+    Create a spectrogram from an audio file.
+
+    Args:
+        file_path (str): Path to the audio file.
+
+    Returns:
+        norm_spec_image (np.ndarray): Normalized spectrogram of the audio file.
+    """    
     audio_path = os.path.abspath(file_path)
 
     raw_audio, sr = librosa.load(audio_path, sr=None)

@@ -21,7 +21,7 @@ def split_data(df: pd.DataFrame) -> list[pd.DataFrame, pd.DataFrame, pd.DataFram
     return train_set, val_set, test_set
 
 
-def save_data(train_set: pd.DataFrame, val_set: pd.DataFrame, test_set: pd.DataFrame):
+def save_data(train_set: pd.DataFrame, val_set: pd.DataFrame, test_set: pd.DataFrame) -> None:
     """
     Saves the training, validation, and test DataFrames to CSV files.
 
@@ -40,7 +40,16 @@ def save_data(train_set: pd.DataFrame, val_set: pd.DataFrame, test_set: pd.DataF
     return
 
 
-def move_subset(subset, source_dir, target_dir):
+def move_subset(subset: pd.DataFrame, source_dir: str, target_dir: str) -> None:
+    """
+    Move a subset of files from the source directory to the target directory.
+
+    Args:
+        subset (pd.DataFrame): The subset of data containing file names to move.
+        source_dir (str): The source directory containing the original files.
+        target_dir (str): The target directory to move the files to.
+    """
+
     os.makedirs(target_dir, exist_ok=True)
 
     files_moved = 0
@@ -59,7 +68,15 @@ def move_subset(subset, source_dir, target_dir):
     return
 
 
-def split_data_folder(data_csv_path: str, source_dir: str):
+def split_data_folder(data_csv_path: str, source_dir: str) -> None:
+    """
+    Splits the data into training, validation, and test sets, saves the labels to CSV files,
+
+    Args:
+        data_csv_path (str): The path to the CSV file which contains the data labels.
+        source_dir (str): The source directory containing the original audio files.
+    """    
+    
     df = pd.read_csv(data_csv_path)
     train_set, val_set, test_set = split_data(df)
 

@@ -1,15 +1,15 @@
 import numpy as np
 
 
-def peak_normalization(audio) -> np.ndarray:
+def peak_normalization(audio: np.ndarray) -> np.ndarray:
     """
     Normalize the audio signal to the peak amplitude
     
-    Parameters:
-    audio (numpy.ndarray): The audio signal to be normalized.
+    Args:
+    audio (np.ndarray): The audio signal to be normalized.
     
     Returns:
-    numpy.ndarray: The normalized audio signal.
+        np.ndarray: The normalized audio signal.
     """
     peak = np.max(np.abs(audio))
     if peak > 0:
@@ -18,14 +18,15 @@ def peak_normalization(audio) -> np.ndarray:
     return audio
 
 
-def rms_normalize(audio) -> np.ndarray:
+def rms_normalize(audio: np.ndarray) -> np.ndarray:
     """
-    Normalize the audio signal to the root mean square (RMS) amplitude
-    Parameters:
-    y (numpy.ndarray): The audio signal to be normalized.
+    Normalize the audio signal to the root mean square (RMS) amplitude.
+
+    Args:
+        audio (np.ndarray): The audio signal to be normalized.
 
     Returns:
-    numpy.ndarray: The normalized audio signal.
+        audio (np.ndarray): The normalized audio signal.
     """
     rms = np.sqrt(np.mean(audio**2))
     if rms > 0:
@@ -38,10 +39,11 @@ def spectrogram_normalization(spectrogram) -> np.ndarray:
     """
     Normalize the spectrogram to the range [0, 1]
 
-    Parameters: spectrogram (numpy.ndarray): The spectrogram to be normalized.
-    
+    Args:
+        spectrogram (np.ndarray): The spectrogram to be normalized.
+
     Returns:
-    numpy.ndarray: The normalized spectrogram.
+        norm_spectrogram (np.ndarray): The normalized spectrogram.
     """
 
     norm_spectrogram = (spectrogram - np.min(spectrogram)) / (np.max(spectrogram) - np.min(spectrogram))
