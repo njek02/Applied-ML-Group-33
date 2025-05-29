@@ -1,8 +1,7 @@
 import os
 import torch
 from torch.utils.data import Dataset, DataLoader
-from preprocessing.preprocess_CNN_sample import preprocess_sample
-import numpy as np
+from whale_call_project.preprocessing.preprocess_CNN import preprocess_sample
 import pandas as pd
 
 

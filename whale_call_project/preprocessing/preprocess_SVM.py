@@ -2,15 +2,15 @@ import sys
 import os
 import numpy as np
 import pandas as pd
-from normalization import peak_normalization, spectrogram_normalization
+from whale_call_project.preprocessing.normalization import peak_normalization, spectrogram_normalization
 # from pca import to_pca
 # from split_data import datasplit
 import librosa
-from wave_to_spec import wave_to_spec
+from whale_call_project.preprocessing.wave_to_image import wave_to_spec
 import matplotlib.pyplot as plt
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from metrics.visualization import Visualizer
-from metrics.evaluation import evaluate_model
+from whale_call_project.metrics.visualization import Visualizer
+from whale_call_project.metrics.evaluation import evaluate_model
 from whale_call_project.models.SVM import SVCModel 
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler

@@ -2,18 +2,19 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
-import seaborn as sn
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.metrics import f1_score, confusion_matrix, roc_auc_score, accuracy_score
+from sklearn.metrics import f1_score, confusion_matrix, roc_auc_score, accuracy_score, ConfusionMatrixDisplay
+
 
 class CNN(nn.Module):
     """A Convolutional Neural Network (CNN) model for image classification."""
-    def __init__(self) -> None:
+    def __init__(self, class_weights: np.ndarray = None) -> None:
         """
         Initializes the CNN model by defining the layers.
         """
         super().__init__()
+        self.class_weights = class_weights
 
         self.model_layers = nn.Sequential(
             # Convolutional block 1
@@ -67,10 +68,13 @@ class CNN(nn.Module):
             None
         """
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        print(device)
         self.to(device)
+        if self.class_weights is not None:
+            weights = torch.tensor(self.class_weights, dtype=torch.float).to(device)
+        else:
+            weights = None
 
-        criterion = nn.CrossEntropyLoss()
+        criterion = nn.CrossEntropyLoss(weight=weights)
         optimizer = optim.Adam(params=self.parameters(), lr=0.001, weight_decay=0.0001)
 
         num_epochs = 15
@@ -80,9 +84,7 @@ class CNN(nn.Module):
             self.train()
             # Training phase
             train_loss = 0
-            i = 0
             for inputs, labels in training_data:
-                print("Step: ", i)
                 inputs, labels = inputs.to(device), labels.to(device)
 
                 optimizer.zero_grad()
@@ -93,7 +95,6 @@ class CNN(nn.Module):
                 loss.backward()
                 optimizer.step()
                 train_loss += loss.item()
-                i += 1
 
             train_losses.append(train_loss / len(training_data))
 
@@ -179,9 +180,11 @@ class CNN(nn.Module):
             print(f"Area under ROC: {auroc:.4f}")
             print(f"Accuracy: {accuracy:.4f}")
 
-            plt.figure(figsize=(6, 4))
-            sn.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=np.unique(ground_truths), yticklabels=np.unique(ground_truths))
+            disp = ConfusionMatrixDisplay(confusion_matrix=conf_matrix, display_labels=np.unique(ground_truths))
+            disp.plot(cmap='Blues', values_format='d')
+
+            plt.title('Confusion Matrix')
             plt.xlabel('Predicted')
             plt.ylabel('True')
-            plt.title('Confusion Matrix')
+            plt.tight_layout()
             plt.show()
