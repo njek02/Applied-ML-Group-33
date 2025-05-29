@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from metrics.visualization import Visualizer
 from metrics.evaluation import evaluate_model
-from project_name.models.SVM import SVCModel 
+from whale_call_project.models.SVM import SVCModel 
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline

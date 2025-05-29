@@ -1,5 +1,5 @@
-from old_stuff.CNN_Matt import CNN
-from project_name.data_loading.audio_dataloader import AudioDataset
+from whale_call_project.models.CNN import CNN
+from whale_call_project.data_loading.audio_dataloader import AudioDataset
 from torch.utils.data import DataLoader
 from preprocessing.split_data import split_data_folder
 import torchvision.transforms as transforms

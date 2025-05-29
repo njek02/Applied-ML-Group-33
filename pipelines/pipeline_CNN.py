@@ -1,20 +1,10 @@
-<<<<<<< HEAD
-from old_stuff.CNN_Matt import CNN
-from project_name.data_loading.audio_dataloader import AudioDataset
+from whale_call_project.models.CNN import CNN
+from whale_call_project.data_loading.audio_dataloader import AudioDataset
 from torch.utils.data import DataLoader
 from preprocessing.split_data import split_data_folder
 import torchvision.transforms as transforms
 
 
-=======
-from old_stuff.Old_CNN import CNN
-from project_name.data_loading.audio_dataloader import AudioDataset
-from torch.utils.data import DataLoader
-# from preprocessing.split_data import split_data_folder
-from sklearn.utils.class_weight import compute_class_weight
-import numpy as np
-import pandas as pd
->>>>>>> 731845712a65db9b2ee3c901dcffc16e1acdeabe
 
 # Comment out if data split not done yet
 # csv_path = "data\\train.csv"
@@ -37,13 +27,10 @@ print("Training Loaded")
 validation_set = AudioDataset("data/validation_data/", "data/data_labels/validation_data.csv")
 print("Validation Loaded")
 
-<<<<<<< HEAD
 train_loader = DataLoader(training_set, batch_size=64)
 print("Also done")
 val_loader = DataLoader(validation_set, batch_size=64)
 print("Time to start training")
-=======
->>>>>>> 731845712a65db9b2ee3c901dcffc16e1acdeabe
 
 # Compute class weights
 df = pd.read_csv('data/data_labels/training_data.csv')
