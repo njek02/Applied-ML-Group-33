@@ -50,6 +50,11 @@ seaborn = "==0.12.2"
 torch = {version = "==2.2.2", index = "downloadpytorch"}
 torchvision = {version = "==0.17.2", index = "downloadpytorch"}
 torchaudio = {version = "==2.2.2", index = "downloadpytorch"}
+fastapi = "*"
+starlette = "*"
+pydantic = "*"
+uvicorn = "*"
+python-multipart = "*"
 
 [dev-packages]
 
