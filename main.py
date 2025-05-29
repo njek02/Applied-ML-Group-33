@@ -66,7 +66,7 @@ async def predict(audio_file: UploadFile = File(...)):
     prediction = model(preprocessed_sample)
     _, predicted_class = torch.max(prediction, 1)
     
-    # Convert prediction to labek
+    # Convert prediction to label
     if predicted_class.item() == 0:
         predicted_label = "There is no Right whale upcall present in this fragment"
     else:
@@ -75,4 +75,3 @@ async def predict(audio_file: UploadFile = File(...)):
         filename = audio_file.filename,
         prediction= predicted_label
     )
-

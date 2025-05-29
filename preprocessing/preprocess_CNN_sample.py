@@ -2,6 +2,7 @@ import librosa
 import numpy as np
 from preprocessing.wave_to_spec import wave_to_spec
 from preprocessing.spec_to_image import spec_to_image
+from PIL import Image
 
 
 def preprocess_sample(file_path: str) -> np.ndarray:
@@ -13,9 +14,15 @@ def preprocess_sample(file_path: str) -> np.ndarray:
     Returns:
         spec_image (np.ndarray): Preprocessed audio file as a spectrogram image.
     """    
-    raw_audio, sr = librosa.load(file_path, sr=None)
+    y, sr = librosa.load(file_path, sr=None)
 
-    spectrogram = wave_to_spec(y=raw_audio, sr=sr)
+    if sr != 2000:
+        raise ValueError(f"Invalid sampling rate: {sr}. Expected 2000 Hz.")
+
+    if len(y) < 4000:
+        raise ValueError(f"Audio fragment too short: {len(y)/sr:.4f}. Minimum duration needs to be 2 seconds")
+
+    spectrogram = wave_to_spec(y=y, sr=sr)
 
     spec_image = spec_to_image(spectrogram=spectrogram)
 
