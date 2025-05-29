@@ -1,9 +1,10 @@
 from fastapi import FastAPI, UploadFile, HTTPException, File
-from whale_call_project.preprocessing.preprocess_CNN_sample import preprocess_sample
+from whale_call_project.preprocessing.preprocess_CNN import preprocess_sample
 from whale_call_project.models.CNN import CNN
 import torch
 from starlette.responses import RedirectResponse
 from pydantic import BaseModel
+
 
 class Prediction(BaseModel):
     """
@@ -11,6 +12,7 @@ class Prediction(BaseModel):
     """    
     filename: str
     prediction: str
+
 
 app = FastAPI(
     title="Right Whale Upcall Classifier",
@@ -39,16 +41,21 @@ async def root():
     return RedirectResponse(url='/docs')
 
 
-@app.post("/predictions", description=("Right whale upcall classifier endpoint. "
+@app.post("/predictions", description=("Right whale upcall classifier prediction endpoint. "
                                       "Audio file should be a .aiff file with a sampling rate of 2000 Hz. "
                                       "Furthermore, all relevant information should be in the first 2 seconds. "
                                       "Returns the prediction as a string."))
-async def predict(audio_file: UploadFile = File(...)):
+async def predict(
+    audio_file: UploadFile = File(
+        ...,
+        description="Upload a .aiff audio file for prediction.",
+        media_type="audio/aiff",
+        )):
 
     if not audio_file.filename.endswith('.aiff'):
         raise HTTPException(status_code=415, detail="Invalid file type. Only .aiff files are accepted.")
     
-    # Preprocess sample
+    # Preprocess sample, see whale_call_project/preprocessing/preprocess_CNN.py for details
     try:
         preprocessed_sample = preprocess_sample(audio_file.file)
     except ValueError as ve:
@@ -59,10 +66,10 @@ async def predict(audio_file: UploadFile = File(...)):
 
     # Load model
     model = CNN()
-    model.load_state_dict(torch.load("CNNmodel.pth"))
-    model.eval()
-    
+    model.load_state_dict(torch.load("models/CNNmodel.pth"))
+
     # Make a prediction
+    model.eval()
     prediction = model(preprocessed_sample)
     _, predicted_class = torch.max(prediction, 1)
     

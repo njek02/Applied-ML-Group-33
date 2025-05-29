@@ -3,6 +3,11 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
+[[source]]
+url = "https://download.pytorch.org/whl/"
+verify_ssl = true
+name = "downloadpytorch"
+
 [packages]
 audioread = "==3.0.1"
 certifi = "==2025.4.26"
@@ -21,9 +26,9 @@ llvmlite = "==0.44.0"
 matplotlib = "==3.10.1"
 msgpack = "==1.1.0"
 numba = "==0.61.2"
-numpy = "==2.2.5"
+numpy = "==1.26.4"
 packaging = "==25.0"
-pandas = "==2.2.3"
+pandas = "==1.5.3"
 pillow = "==11.2.1"
 platformdirs = "==4.3.7"
 pooch = "==1.8.2"
@@ -41,9 +46,12 @@ threadpoolctl = "==3.6.0"
 typing-extensions = "==4.13.2"
 tzdata = "==2025.2"
 urllib3 = "==2.4.0"
-torch = "*"
+seaborn = "==0.12.2"
+torch = {version = "==2.2.2", index = "downloadpytorch"}
+torchvision = {version = "==0.17.2", index = "downloadpytorch"}
+torchaudio = {version = "==2.2.2", index = "downloadpytorch"}
 
 [dev-packages]
 
 [requires]
-python_version = "3.12"
+python_version = "3.11"
