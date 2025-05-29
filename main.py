@@ -1,6 +1,6 @@
 from fastapi import FastAPI, UploadFile, HTTPException, File
-from preprocessing.preprocess_CNN_sample import preprocess_sample
-from old_stuff.CNN_Matt import CNN
+from whale_call_project.preprocessing.preprocess_CNN_sample import preprocess_sample
+from whale_call_project.models.CNN import CNN
 import torch
 from starlette.responses import RedirectResponse
 from pydantic import BaseModel
