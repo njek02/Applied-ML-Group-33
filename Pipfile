@@ -55,6 +55,7 @@ starlette = "*"
 pydantic = "*"
 uvicorn = "*"
 python-multipart = "*"
+grad-cam = "*"
 
 [dev-packages]
 

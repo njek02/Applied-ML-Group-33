@@ -25,12 +25,13 @@ def wave_to_spec(y: np.ndarray, sr: int) -> np.ndarray:
     return db_mel_spec
 
 
-def spec_to_image(spectrogram: np.ndarray) -> np.ndarray:
+def spec_to_image(spectrogram: np.ndarray, rgb_output: bool = False) -> np.ndarray:
     """
     Convert a spectrogram to an image.
 
     Args:
         spectrogram (np.ndarray): The input spectrogram.
+        rgb_output (bool): Whether the output image should be RGB
 
     Returns:
         input_image (np.ndarray): The output image representation of the spectrogram.
@@ -42,6 +43,15 @@ def spec_to_image(spectrogram: np.ndarray) -> np.ndarray:
     # Convert to Image class and resize image
     image = Image.fromarray(spec_image)
     resized_image = image.resize((32, 32))
+
+    if rgb_output:
+        # Convert to RGB Image
+        rgb_image = resized_image.convert("RGB")
+
+        # Convert back to array and normalize to [0, 1]
+        rgb_image = np.array(rgb_image).astype(np.float32) / 255.0
+
+        return rgb_image
 
     # Convert back to array and normalize to [0, 1]
     input_image = np.array(resized_image).astype(np.float32) / 255.0

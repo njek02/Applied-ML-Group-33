@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "4d2aaf39172b08cb0072cbfa298bcc309490db4a419018571c58ab4193515591"
+            "sha256": "0d432cb54eb2e3936a2b1ca98fa2e46de15ca03ee820d3aa6f4b33c2cca03147"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -407,6 +407,14 @@
             ],
             "markers": "python_version >= '3.9'",
             "version": "==2025.5.1"
+        },
+        "grad-cam": {
+            "hashes": [
+                "sha256:690c433d226d35c89c9eb170462db204909cb06b39c7381e6880a49b6fc37015"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.8'",
+            "version": "==1.5.5"
         },
         "h11": {
             "hashes": [
@@ -839,6 +847,19 @@
             "index": "pypi",
             "markers": "python_version >= '3.9'",
             "version": "==1.26.4"
+        },
+        "opencv-python": {
+            "hashes": [
+                "sha256:03d60ccae62304860d232272e4a4fda93c39d595780cb40b161b310244b736a4",
+                "sha256:085ad9b77c18853ea66283e98affefe2de8cc4c1f43eda4c100cf9b2721142ec",
+                "sha256:1b92ae2c8852208817e6776ba1ea0d6b1e0a1b5431e971a2a0ddd2a8cc398202",
+                "sha256:432f67c223f1dc2824f5e73cdfcd9db0efc8710647d4e813012195dc9122a52a",
+                "sha256:6b02611523803495003bd87362db3e1d2a0454a6a63025dc6658a9830570aa0d",
+                "sha256:810549cb2a4aedaa84ad9a1c92fbfdfc14090e2749cedf2c1589ad8359aa169b",
+                "sha256:9d05ef13d23fe97f575153558653e2d6e87103995d54e6a35db3f282fe1f9c66"
+            ],
+            "markers": "python_version >= '3.6'",
+            "version": "==4.11.0.86"
         },
         "packaging": {
             "hashes": [
@@ -1387,6 +1408,22 @@
             ],
             "index": "downloadpytorch",
             "version": "==0.17.2+cu121"
+        },
+        "tqdm": {
+            "hashes": [
+                "sha256:26445eca388f82e72884e0d580d5464cd801a3ea01e63e5601bdff9ba6a48de2",
+                "sha256:f8aef9c52c08c13a65f30ea34f4e5aac3fd1a34959879d7e59e63027286627f2"
+            ],
+            "markers": "python_version >= '3.7'",
+            "version": "==4.67.1"
+        },
+        "ttach": {
+            "hashes": [
+                "sha256:120c4dd881feb0e9c8dd63b154f2655891c3e20689b68a94d162bfd5557bcb48",
+                "sha256:7000bb4334f856b0c79a341df386c92f1c76faf091043cc3cd7f541d2149faf8"
+            ],
+            "markers": "python_full_version >= '3.0.0'",
+            "version": "==0.0.3"
         },
         "typing-extensions": {
             "hashes": [

@@ -3,11 +3,12 @@ import numpy as np
 from whale_call_project.preprocessing.wave_to_image import wave_to_spec, spec_to_image
 
 
-def preprocess_sample(file_path: str) -> np.ndarray:
+def preprocess_sample(file_path: str, rgb_output: bool = False) -> np.ndarray:
     """Preprocess audio file for CNN input.
 
     Args:
         file_path (str): Path to the audio file.
+        rgb_output (bool): Whether the output image should be RGB
 
     Returns:
         spec_image (np.ndarray): Preprocessed audio file as a spectrogram image.
@@ -22,6 +23,6 @@ def preprocess_sample(file_path: str) -> np.ndarray:
 
     spectrogram = wave_to_spec(y=y, sr=sr)
 
-    spec_image = spec_to_image(spectrogram=spectrogram)
+    spec_image = spec_to_image(spectrogram=spectrogram, rgb_output=rgb_output)
 
     return spec_image
