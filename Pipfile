@@ -56,6 +56,13 @@ pydantic = "*"
 uvicorn = "*"
 python-multipart = "*"
 grad-cam = "*"
+importlib-metadata = "*"
+pympler = "*"
+entrypoints = "*"
+toolz = "*"
+tzlocal = "*"
+validators = "*"
+watchdog = "*"
 
 [dev-packages]
 

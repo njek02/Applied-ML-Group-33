@@ -1,9 +1,10 @@
 import matplotlib.pyplot as mp
 from typing import Any
 import numpy as np
-import seaborn as sb
-from metrics.evaluation import evaluate_model
+import librosa
+from whale_call_project.preprocessing.wave_to_image import wave_to_spec
 from sklearn.metrics import roc_curve, auc, confusion_matrix
+import matplotlib.pyplot as plt
 
 class Visualizer():
     """
@@ -73,3 +74,15 @@ class Visualizer():
         mp.tight_layout()
         mp.savefig(f"results/visualisations/{model_name}_loss_curve.png")
         mp.show()
+
+
+    def plot_spectrogram(self, file_path: str) -> None:
+        y, sr = librosa.load("data/training_data/train168.aiff", sr=None)
+
+        spec = wave_to_spec(y, sr)
+
+        librosa.display.specshow(spec, sr=sr, x_axis='time', y_axis='mel', fmin=100, fmax=300)
+        plt.colorbar(format='%+2.0f dB')
+        plt.title('Mel Spectrogram')
+        plt.tight_layout()
+        plt.show()

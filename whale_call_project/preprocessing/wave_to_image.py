@@ -40,18 +40,21 @@ def spec_to_image(spectrogram: np.ndarray, rgb_output: bool = False) -> np.ndarr
     spec_image = (spectrogram - spectrogram.min()) / (spectrogram.max() - spectrogram.min()) * 255
     spec_image = spec_image.astype(np.uint8)
 
-    # Convert to Image class and resize image
+    # Convert to Image class
     image = Image.fromarray(spec_image)
-    resized_image = image.resize((32, 32))
 
     if rgb_output:
         # Convert to RGB Image
-        rgb_image = resized_image.convert("RGB")
+        rgb_image = image.convert("RGB")
+        rgb_image = rgb_image.resize((64, 64))
 
         # Convert back to array and normalize to [0, 1]
         rgb_image = np.array(rgb_image).astype(np.float32) / 255.0
 
         return rgb_image
+    
+    # Resize image to fit CNN
+    resized_image = image.resize((32, 32))
 
     # Convert back to array and normalize to [0, 1]
     input_image = np.array(resized_image).astype(np.float32) / 255.0

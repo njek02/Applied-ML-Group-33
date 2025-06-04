@@ -28,22 +28,29 @@ if upload_file is not None:
     else:
         st.success("File uploaded successfully!")
 
-        test_file_path = r"C:\Users\tomas\OneDrive\Desktop\Second year\Applied ML\Applied-ML-Group-33\train168.aiff"
+        test_file_path = "train168.aiff"
         st.success(f"Using test file: {test_file_path}")
 
         if st.button("RUN MODEL"):
             if model == "CNN":
                 try:
                     # Let preprocess_sample handle any resampling
-                    spec_image = preprocess_sample(test_file_path, rgb_output=False)
+                    input_image = preprocess_sample(test_file_path, rgb_output=False)
+                    
+                    y, sr = librosa.load(test_file_path, sr=None)
+                    print(sr)
+                    mel_spec = librosa.feature.melspectrogram(y=y, sr=sr, n_fft=256, hop_length=64, n_mels=64, fmin=100, fmax=400)
+                    db_mel_spec = librosa.power_to_db(mel_spec)
+
+
                     st.write("Spectrogram image (CNN input):")
                     fig, ax = plt.subplots()
-                    librosa.display.specshow(spec_image.squeeze(), x_axis='time', y_axis='mel', ax=ax)
+                    librosa.display.specshow(db_mel_spec, x_axis='time', y_axis='mel', ax=ax, n_fft=256, hop_length=64, fmin=100, fmax=400)
                     st.pyplot(fig)
                     plt.close(fig)
 
                     # Prepare input for CNN (add batch and channel dimensions)
-                    input_tensor = torch.tensor(spec_image, dtype=torch.float32).unsqueeze(0)  # (1, 1, H, W)
+                    input_tensor = torch.tensor(input_image, dtype=torch.float32).unsqueeze(0)  # (1, 1, H, W)
 
                     # Load trained CNN model
                     model = CNN()
