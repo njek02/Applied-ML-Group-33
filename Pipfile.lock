@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "effdaae2a0512627a30db0876fb7a66a213067d0b8d89e65b11f1effa6ad2c0a"
+            "sha256": "dbc51dc6e95b9423844fe4f30542a554287dbe3499dc344c87b47018a4d113dd"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -572,6 +572,14 @@
             "index": "pypi",
             "markers": "python_version >= '3.8'",
             "version": "==0.11.0"
+        },
+        "lightning-utilities": {
+            "hashes": [
+                "sha256:37e2f83f273890052955a44054382c211a303012ee577619efbaa5df9e65e9f5",
+                "sha256:4ab9066aa36cd7b93a05713808901909e96cc3f187ea6fd3052b2fd91313b468"
+            ],
+            "markers": "python_version >= '3.9'",
+            "version": "==0.14.3"
         },
         "llvmlite": {
             "hashes": [
@@ -1325,6 +1333,14 @@
             "markers": "python_version >= '3.7'",
             "version": "==0.12.2"
         },
+        "setuptools": {
+            "hashes": [
+                "sha256:062d34222ad13e0cc312a4c02d73f059e86a4acbfbdea8f8f76b28c99f306922",
+                "sha256:f36b47402ecde768dbfafc46e8e4207b4360c654f1f3bb84475f0a28628fb19c"
+            ],
+            "markers": "python_version >= '3.9'",
+            "version": "==80.9.0"
+        },
         "six": {
             "hashes": [
                 "sha256:4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274",
@@ -1450,6 +1466,15 @@
             ],
             "index": "downloadpytorch",
             "version": "==2.2.2+cu121"
+        },
+        "torchmetrics": {
+            "hashes": [
+                "sha256:9cc3bff07a715fcb37fb04d2a1a5ae36267c36066c097578020056653a94f2a8",
+                "sha256:ba401cd01aeaa268e809c0e4f42ef8f95669bf9b485e1d93d54dc765e012338a"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.9'",
+            "version": "==1.7.2"
         },
         "torchvision": {
             "hashes": [
