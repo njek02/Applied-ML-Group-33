@@ -63,6 +63,7 @@ toolz = "*"
 tzlocal = "*"
 validators = "*"
 watchdog = "*"
+torchmetrics = "*"
 
 [dev-packages]
 
