@@ -26,8 +26,6 @@ if upload_file is not None:
     if not upload_file.name.endswith(".aiff"):
         st.error("Please upload a valid AIFF file.")
     else:
-        st.success("File uploaded successfully!")
-
         test_file_path = "train168.aiff"
         st.success(f"Using test file: {test_file_path}")
 
@@ -43,7 +41,22 @@ if upload_file is not None:
                     db_mel_spec = librosa.power_to_db(mel_spec)
 
 
-                    st.write("Spectrogram image (CNN input):")
+                    st.markdown("""
+                        <div style='
+                            margin-top: 30px;
+                            margin-bottom: 10px;
+                            padding: 10px 15px;
+                            background-color: #e8f4fc;
+                            color: #2c3e50;
+                            font-size: 20px;
+                            font-weight: 600;
+                            border-left: 6px solid #1abc9c;
+                            border-radius: 5px;
+                        '>
+                            📊 Spectrogram Image (CNN Input)
+                        </div>
+                    """, unsafe_allow_html=True)
+
                     fig, ax = plt.subplots()
                     librosa.display.specshow(db_mel_spec, x_axis='time', y_axis='mel', ax=ax, n_fft=256, hop_length=64, fmin=100, fmax=400)
                     st.pyplot(fig)
@@ -61,7 +74,20 @@ if upload_file is not None:
                     with torch.no_grad():
                         output = model(input_tensor)
                         predicted_class = torch.argmax(output, dim=1).item()
-                    st.write(f"Predicted class: {predicted_class}")
+                        st.markdown(f"""
+                            <div style='
+                                background-color:#f0f2f6;
+                                padding:20px;
+                                border-radius:10px;
+                                text-align:center;
+                                font-size:24px;
+                                font-weight:bold;
+                                color:#2c3e50;
+                            '>
+                                🐋 Predicted Class: <span style='color:#1abc9c'>{predicted_class}</span>
+                            </div>
+                        """, unsafe_allow_html=True)
+
 
                 except Exception as e:
                     st.error(f"Error during preprocessing or prediction: {e}")
