@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.pyo
+*.log
+*.ipynb
+*.tmp
+*.swp
+.git/
+.env
+data/
+*.onnx
+*.pt
