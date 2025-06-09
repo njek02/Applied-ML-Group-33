@@ -7,10 +7,10 @@ import numpy as np
 from whale_call_project.preprocessing.preprocess_SVM import Preprocess
 import pandas as pd
 import torch
-from whale_call_project.preprocessing.wave_to_image import wave_to_spec
-from whale_call_project.preprocessing.normalization import spectrogram_normalization
+import torch.nn.functional as F
 from sklearn.decomposition import PCA
 from whale_call_project.preprocessing.preprocess_CNN import preprocess_sample
+from XAI.grad_cam_visualization import visualize_grad_cam
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 import soundfile as sf
@@ -27,16 +27,17 @@ if upload_file is not None:
         st.error("Please upload a valid AIFF file.")
     else:
         test_file_path = "train168.aiff"
-        st.success(f"Using test file: {test_file_path}")
+        st.success(f"Using file: {upload_file.name}")
 
         if st.button("RUN MODEL"):
             if model == "CNN":
                 try:
                     # Let preprocess_sample handle any resampling
-                    input_image = preprocess_sample(test_file_path, rgb_output=False)
+                    file_path = upload_file.name
+                    input_image = preprocess_sample(file_path, rgb_output=False)
                     
-                    y, sr = librosa.load(test_file_path, sr=None)
-                    print(sr)
+                    y, sr = librosa.load(file_path, sr=None)
+
                     mel_spec = librosa.feature.melspectrogram(y=y, sr=sr, n_fft=256, hop_length=64, n_mels=64, fmin=100, fmax=400)
                     db_mel_spec = librosa.power_to_db(mel_spec)
 
@@ -67,13 +68,16 @@ if upload_file is not None:
 
                     # Load trained CNN model
                     model = CNN()
-                    model.load_state_dict(torch.load("models/CNNmodel.pth", map_location=torch.device('cpu')))
+                    model.load_state_dict(torch.load("models/CNNmodel.pth"))
                     model.eval()
 
                     # Predict
                     with torch.no_grad():
                         output = model(input_tensor)
-                        predicted_class = torch.argmax(output, dim=1).item()
+                        prob_1 = F.softmax(output, dim=1)[0, 1].item()
+                        predicted_class = 1 if prob_1 >= 0.48 else 0
+
+
                         st.markdown(f"""
                             <div style='
                                 background-color:#f0f2f6;
@@ -87,6 +91,10 @@ if upload_file is not None:
                                 🐋 Predicted Class: <span style='color:#1abc9c'>{predicted_class}</span>
                             </div>
                         """, unsafe_allow_html=True)
+                    
+                    # Plot justification heatmap
+                    target_layers = [model.model_layers[10]]
+                    visualize_grad_cam(model, target_layers, file_path=file_path, label=predicted_class, use_st=True)
 
 
                 except Exception as e:

@@ -22,19 +22,24 @@ if __name__ == "__main__":
     print("Training Dataset Loaded")
     validation_set = AudioDataset("data/validation_data/", "data/data_labels/validation_data.csv")
     print("Validation Dataset Loaded")
+    test_set = AudioDataset("data/test_data/", "data/data_labels/test_data.csv")
+    print("Test Dataset Loaded")
 
     # Convert Datasets into DataLoaders
     train_loader = DataLoader(training_set, batch_size=128)
     print("Training DataLoader created")
     val_loader = DataLoader(validation_set, batch_size=128)
     print("Validation DataLoader created")
+    test_loader = DataLoader(test_set, batch_size=128)
+    print("Test DataLoader created")
+
 
     # Train CNN
-    model = CNN()
+    model = CNN(class_weights=None)
     print("Training model...")
     model.train_model(train_loader, val_loader)
     print("Evaluating model...")
-    model.evaluate_model(val_loader)
+    model.evaluate_model(test_loader)
 
 
     # Save the Model
