@@ -33,11 +33,13 @@ if __name__ == "__main__":
     test_loader = DataLoader(test_set, batch_size=128)
     print("Test DataLoader created")
 
+    class_weights = [0.65294447, 2.1345802]
 
     # Train CNN
-    model = CNN(class_weights=None)
+    model = CNN(class_weights=class_weights)
     print("Training model...")
     model.train_model(train_loader, val_loader)
+    #  model.load_state_dict(torch.load("models/CNNmodel.pth"))
     print("Evaluating model...")
     model.evaluate_model(test_loader)
 

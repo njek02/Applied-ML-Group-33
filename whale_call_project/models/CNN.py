@@ -4,7 +4,7 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.metrics import f1_score, confusion_matrix, roc_auc_score, accuracy_score, ConfusionMatrixDisplay
+from sklearn.metrics import f1_score, confusion_matrix, roc_auc_score, accuracy_score, ConfusionMatrixDisplay, PrecisionRecallDisplay
 
 
 class CNN(nn.Module):
@@ -140,6 +140,7 @@ class CNN(nn.Module):
             """
             device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
             self.to(device)
+            self.eval()
 
             predictions = []
             ground_truths = []
@@ -151,8 +152,9 @@ class CNN(nn.Module):
                     inputs, labels = inputs.to(device), labels.to(device)
 
                     outputs = self(inputs)
-                    _, predicted = torch.max(outputs, 1)
                     probs = torch.softmax(outputs, dim=1)[:, 1]  # Probability of class 1
+
+                    predicted = (probs >= 0.48)
 
                     probabilities.append(probs)
                     predictions.append(predicted)
@@ -188,3 +190,13 @@ class CNN(nn.Module):
             plt.ylabel('True')
             plt.tight_layout()
             plt.show()
+
+            # Precision Recall curve
+
+            display = PrecisionRecallDisplay.from_predictions(
+            ground_truths, probabilities, name="CNN", plot_chance_level=True, despine=True
+            )
+            _ = display.ax_.set_title("Precision-Recall curve")
+
+            plt.show()
+

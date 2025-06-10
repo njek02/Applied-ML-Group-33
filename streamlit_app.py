@@ -74,9 +74,14 @@ if upload_file is not None:
                     # Predict
                     with torch.no_grad():
                         output = model(input_tensor)
-                        prob_1 = F.softmax(output, dim=1)[0, 1].item()
-                        predicted_class = 1 if prob_1 >= 0.48 else 0
+                        probs = torch.softmax(output, dim=1)[:, 1].item()  # Probability of class 1
 
+                        predicted_class = 1 if (probs >= 0.48) else  0
+
+                        if predicted_class == 1:
+                            prediction_msg = "There is a Right whale upcall present."
+                        else:
+                            prediction_msg = "There is no Right whale upcall present."
 
                         st.markdown(f"""
                             <div style='
@@ -88,7 +93,7 @@ if upload_file is not None:
                                 font-weight:bold;
                                 color:#2c3e50;
                             '>
-                                🐋 Predicted Class: <span style='color:#1abc9c'>{predicted_class}</span>
+                                🐋 Prediction: <span style='color:#1abc9c'>{prediction_msg}</span>
                             </div>
                         """, unsafe_allow_html=True)
                     
