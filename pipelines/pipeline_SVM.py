@@ -3,31 +3,20 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from whale_call_project.preprocessing.preprocess_SVM import Preprocess, evaluate_model
 from whale_call_project.metrics.visualization import Visualizer
-import numpy as np
 import pandas as pd
 
-
 if __name__ == "__main__":
-    # Example usage
+
     preprocessor = Preprocess()
-    # preprocessor.preprocess_training_files("data/training_data")
-    # val_predict = preprocessor.preprocess_validation_test_files("data/validation_data")
-    # test_predict = preprocessor.preprocess_validation_test_files("data/test_data")
+    training_data = preprocessor.preprocess_training_files("training_data")
+    val_predict = preprocessor.preprocess_validation_test_files("validation_data")
+    test_predict = preprocessor.preprocess_validation_test_files("test_data")
 
-    training_data = np.load("data/x_train.npy")
-    train_dataset = pd.read_csv("data/data_labels/training_data.csv")
-    preprocessor.pipeline.fit(training_data, train_dataset["label"])
-
-    val_list = np.load("data/validation_data_list.npy")
     val_dataset = pd.read_csv("data/data_labels/validation_data.csv")
-    val_predict = preprocessor.pipeline.predict(val_list)
-
-    test_list = np.load("data/test_data_list.npy")
     test_dataset = pd.read_csv("data/data_labels/test_data.csv")
-    test_predict = preprocessor.pipeline.predict(test_list)
 
 
-    print("Evaluation on Training Set:")
+    print("Evaluation on Validation Set:")
     print("-" * 50)
     print("Precision: ", evaluate_model("precision", val_dataset["label"], val_predict))
     print("Recall: ", evaluate_model("recall", val_dataset["label"], val_predict))
