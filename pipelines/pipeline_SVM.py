@@ -1,7 +1,8 @@
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from whale_call_project.preprocessing.preprocess_SVM import Preprocess, evaluate_model
+from whale_call_project.preprocessing.preprocess_SVM import Preprocess
+from whale_call_project.metrics.evaluation import evaluate_model
 from whale_call_project.metrics.visualization import Visualizer
 import pandas as pd
 
