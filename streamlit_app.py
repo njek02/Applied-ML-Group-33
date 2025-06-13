@@ -12,7 +12,7 @@ os.makedirs(upload_folder, exist_ok=True)
 
 st.title("Model prediction on whale sounds")
 
-model = st.selectbox("Select model", ["CNN", "SVM"])
+model = st.selectbox("Select model", ["CNN"])
 upload_file = st.file_uploader("Upload an AIFF file", type= ["aiff"])
 
 
@@ -100,27 +100,3 @@ if upload_file is not None:
 
                 except Exception as e:
                     st.error(f"Error during preprocessing or prediction: {e}")
-
-
-
-            if model == "SVM":
-                """
-                features = create_spectrogram_from_filelike(upload_file)
-                training_data = np.load("data/x_train.npy")
-                train_dataset = pd.read_csv("data/training_data.csv")
-
-                # Debug: Show feature shapes
-                st.write(f"Shape of features from uploaded file: {features.shape}")
-                st.write(f"Shape of training data: {training_data.shape}")
-
-                custom_pipeline = Pipeline([
-                    ('scaler', StandardScaler()),
-                    ('pca', PCA(n_components=0.95)),  # or n_components=features.shape[1]
-                    ('svm', SVCModel())
-                ])
-
-                custom_pipeline.fit(training_data, train_dataset["label"])
-                prediction = custom_pipeline.predict(features)
-                st.write(f"Prediction SVM: {prediction[0]}")
-                """
-                pass
