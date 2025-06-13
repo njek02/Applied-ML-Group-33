@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 from sklearn.metrics import f1_score
 import matplotlib.pyplot as plt
-from sklearn.metrics import f1_score, confusion_matrix, roc_auc_score, accuracy_score, ConfusionMatrixDisplay, PrecisionRecallDisplay
+from sklearn.metrics import f1_score, confusion_matrix, ConfusionMatrixDisplay
 
 
 if __name__ == "__main__":
@@ -17,9 +17,6 @@ if __name__ == "__main__":
 
     val_dataset = pd.read_csv("data/data_labels/validation_data.csv")
     test_dataset = pd.read_csv("data/data_labels/test_data.csv")
-
-    # test_predict = np.ones(len(val_dataset["label"]))
-
 
     print("Evaluation on Validation Set:")
     print("-" * 50)
