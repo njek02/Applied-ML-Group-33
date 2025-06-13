@@ -194,7 +194,7 @@ class CNN(nn.Module):
             # Precision Recall curve
 
             display = PrecisionRecallDisplay.from_predictions(
-            ground_truths, probabilities, name="CNN", plot_chance_level=True, despine=True
+            ground_truths, probabilities, name="CNN", plot_chance_level=True
             )
             _ = display.ax_.set_title("Precision-Recall curve")
 
