@@ -114,9 +114,9 @@ def show_heatmap_streamlit(grayscale_cam: np.ndarray, file_path: str, input_imag
 if __name__ == "__main__":
 
     model = CNN()
-    model.load_state_dict(torch.load("models/CNNmodel.pth"))
+    model.load_state_dict(torch.load("models/CNNmodel_class_w.pth"))
 
-    file_path = "train10703.aiff"
+    file_path = "train168.aiff"
 
     target_layers = [model.model_layers[10]]
 

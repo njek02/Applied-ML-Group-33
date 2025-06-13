@@ -24,9 +24,9 @@ def evaluate_model(name, y_true, y_pred) -> Any:
         Any : The requested metric
     """    
     results = {
-        "precision": precision_score(y_true, y_pred, average="weighted", zero_division=0),
-        "recall": recall_score(y_true, y_pred, average="weighted", zero_division=0),
-        "f1_score": f1_score(y_true, y_pred, average="weighted", zero_division=0),
+        "precision": precision_score(y_true, y_pred, zero_division=0),
+        "recall": recall_score(y_true, y_pred, zero_division=0),
+        "f1_score": f1_score(y_true, y_pred, zero_division=0),
         "confusion_matrix": confusion_matrix(y_true, y_pred),
         "classification_report": classification_report(y_true, y_pred, zero_division=0),
         "classification_report": classification_report(y_true, y_pred, output_dict=True)

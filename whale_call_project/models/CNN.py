@@ -21,7 +21,7 @@ class CNN(nn.Module):
             nn.Conv2d(in_channels=1, out_channels=8, kernel_size=3, padding=1),  # (8, 32, 32)
             nn.BatchNorm2d(8),
             nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2, stride=2),  # (8, 32, 32)
+            nn.MaxPool2d(kernel_size=2, stride=2),  # (8, 16, 16)
             nn.Dropout(p=0.3),
 
             nn.Conv2d(in_channels=8, out_channels=16, kernel_size=3, padding=1),  # (16, 16, 16)
@@ -30,10 +30,10 @@ class CNN(nn.Module):
             nn.MaxPool2d(kernel_size=2, stride=2),  # (16, 8, 8)
             nn.Dropout(p=0.3),
 
-            nn.Conv2d(in_channels=16, out_channels=32, kernel_size=3, padding=1),  # (32, 16, 16)
+            nn.Conv2d(in_channels=16, out_channels=32, kernel_size=3, padding=1),  # (32, 8, 8)
             nn.BatchNorm2d(32),
             nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2, stride=2),  # (16, 8, 8)
+            nn.MaxPool2d(kernel_size=2, stride=2),  # (32, 4, 4)
             nn.Dropout(p=0.3),
 
             nn.Flatten(),  # Flatten the Tensor into a 1D output
@@ -166,7 +166,7 @@ class CNN(nn.Module):
 
             # Metrics
             # F-1 score
-            f_1_score = f1_score(y_true=ground_truths, y_pred=predictions)
+            f_1_score = f1_score(y_true=ground_truths, y_pred=predictions, average="binary")
 
             # Confusion Matrix
             conf_matrix = confusion_matrix(y_true=ground_truths, y_pred=predictions)

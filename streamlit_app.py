@@ -1,20 +1,14 @@
 import streamlit as st
 from whale_call_project.models.CNN import CNN
-from whale_call_project.models.SVM import SVCModel
 import matplotlib.pyplot as plt
 import librosa.display
-import numpy as np
-from whale_call_project.preprocessing.preprocess_SVM import Preprocess
-import pandas as pd
 import torch
-import torch.nn.functional as F
-from sklearn.decomposition import PCA
 from whale_call_project.preprocessing.preprocess_CNN import preprocess_sample
 from XAI.grad_cam_visualization import visualize_grad_cam
-from sklearn.preprocessing import StandardScaler
-from sklearn.pipeline import Pipeline
-import soundfile as sf
+import os
 
+upload_folder = "uploads"
+os.makedirs(upload_folder, exist_ok=True)
 
 st.title("Model prediction on whale sounds")
 
@@ -26,14 +20,16 @@ if upload_file is not None:
     if not upload_file.name.endswith(".aiff"):
         st.error("Please upload a valid AIFF file.")
     else:
-        test_file_path = "train168.aiff"
+        file_path = os.path.join(upload_folder, upload_file.name)
+        with open(file_path, "wb") as f:
+            f.write(upload_file.getbuffer())
+
         st.success(f"Using file: {upload_file.name}")
 
         if st.button("RUN MODEL"):
             if model == "CNN":
                 try:
                     # Let preprocess_sample handle any resampling
-                    file_path = upload_file.name
                     input_image = preprocess_sample(file_path, rgb_output=False)
                     
                     y, sr = librosa.load(file_path, sr=None)

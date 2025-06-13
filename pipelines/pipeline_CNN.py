@@ -39,7 +39,6 @@ if __name__ == "__main__":
     model = CNN(class_weights=class_weights)
     print("Training model...")
     model.train_model(train_loader, val_loader)
-    #  model.load_state_dict(torch.load("models/CNNmodel.pth"))
     print("Evaluating model...")
     model.evaluate_model(test_loader)
 
